@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
 #ifdef MUTEX
 #include <pthread.h>
 #endif
@@ -173,7 +172,11 @@ static void *Lookup(cRealType *para, double *base,
 	   an integer index into base */
     size_t mem = sizeof(Node) +
       npara*sizeof(RealType) + nval*sizeof(ComplexType);
-    assert( (node = malloc(mem)) );
+    node = malloc(mem);
+    if( node == NULL ) {
+      fprintf(stderr, "Error: malloc failed.\n");
+      exit(EXIT_FAILURE);
+    }
     node = (Node *)((char *)node +
       (PtrDiff(base, &node->para[npara]) & (sizeof(ComplexType) - 1)));
     node->succ = NULL;
