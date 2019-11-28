@@ -31,7 +31,7 @@ complexize(
   util/Li2omx
   util/solve)
 
-set(looptools_source
+set(looptools_Fortran_source
     A/Aget.F
     A/AgetC.F
     A/ffca0.F
@@ -104,7 +104,6 @@ set(looptools_source
     util/Li2omx.F
     util/Li2omxC.F
     util/auxCD.F
-    util/cache.c
     util/ff2dl2.F
     util/ffabcd.F
     util/ffbndc.F
@@ -123,27 +122,26 @@ set(looptools_source
     util/solve.F
     util/solveC.F)
 
+set(looptools_C_source util/cache.c)
+
+set(looptools_source ${looptools_Fortran_source} ${looptools_C_source})
+
+# We need to relax the limitation of 72 characters in FORTRAN 77.
+foreach(filename IN LISTS looptools_Fortran_source)
+  if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+    set_source_files_properties(${filename} PROPERTIES COMPILE_FLAGS
+                                "-ffixed-line-length-none -fno-range-check")
+  elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
+    set_source_files_properties(
+      ${filename} PROPERTIES COMPILE_FLAGS
+      "-extend_source -warn truncated_source -assume bscc")
+  endif()
+endforeach()
+
 function(target_common_options target quad)
   target_include_directories(${target} PRIVATE include)
 
-  # NOTE: it is difficult to apply target_compile_options only to Fortran source
-  # files in a cross-platform way. So C compilers may warn invalid options.
-
-  # We need to relax the limitation of 72 characters in FORTRAN 77.
-  if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
-    target_compile_options(${target} PRIVATE -ffixed-line-length-none
-                                             -fno-range-check)
-  elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
-    target_compile_options(
-      ${target}
-      PRIVATE -extend_source
-              -warn
-              truncated_source
-              -warn
-              nouncalled
-              -assume
-              bscc)
-  endif()
+  # TODO: C compilers may warn invalid compiler options...
 
   # Double/quadruple precision.
   if(quad STREQUAL "0")
