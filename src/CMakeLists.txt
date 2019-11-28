@@ -202,3 +202,8 @@ if(looptools_build_quad)
     install(TARGETS lt-quad DESTINATION bin)
   endif()
 endif()
+
+if(looptools_build_double OR looptools_build_quad)
+  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/looptools.h
+          DESTINATION include)
+endif()
