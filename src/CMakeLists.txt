@@ -204,6 +204,8 @@ if(looptools_build_quad)
 endif()
 
 if(looptools_build_double OR looptools_build_quad)
-  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/looptools.h
-          DESTINATION include)
+  if(LOOPTOOLS_INSTALL_HEADERS)
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/looptools.h
+            DESTINATION include)
+  endif()
 endif()

@@ -15,9 +15,11 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 if(NOT_SUBPROJECT)
   option(LOOPTOOLS_INSTALL_EXECUTABLES "install looptools executables" ON)
   option(LOOPTOOLS_INSTALL_LIBRARIES "install looptools libraries" ON)
+  option(LOOPTOOLS_INSTALL_HEADERS "install looptools header files" ON)
 else()
   option(LOOPTOOLS_INSTALL_EXECUTABLES "install looptools executables" OFF)
   option(LOOPTOOLS_INSTALL_LIBRARIES "install looptools libraries" OFF)
+  option(LOOPTOOLS_INSTALL_HEADERS "install looptools header files" OFF)
 endif()
 
 # Default build type.
